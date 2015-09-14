@@ -1,8 +1,7 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 2.4)
 project(makeargv)
 
-set(CMAKE_C_FLAGS "-g -std=c99")
-set(CMAKE_C_COMPILER "clang")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -Og -Wall -Wextra")
 
 set(SOURCE_FILES makeargv.c argtest.c)
 add_executable(makeargv ${SOURCE_FILES})

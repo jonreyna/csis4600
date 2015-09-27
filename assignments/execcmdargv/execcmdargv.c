@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
             /* Execute the requested process with its arguments (tokenized by makeargv()) */
             execvp(myargv[0], &myargv[0]);
             /* execvp() returned, so an error occurred */
-            perror("Child failed to exec command.");
+            perror("Child failed to exec command");
         }
         /* Let the shell know about the error condition with a nonzero return value */
         return 1;

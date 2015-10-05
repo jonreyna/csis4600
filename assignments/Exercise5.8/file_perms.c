@@ -7,7 +7,7 @@
 * your option) any later version. This program is distributed without  *
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
-
+#define _BSD_SOURCE
 /* file_perms.c
    Return a string representation of a file permissions mask.
 */

@@ -8,6 +8,7 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <malloc.h>
 #include "file_perms.h"
 
 static void displayStatInfo(const struct stat *sb) {
@@ -45,9 +46,9 @@ static void displayStatInfo(const struct stat *sb) {
 
     if (sb->st_mode & (S_ISUID | S_ISGID | S_ISVTX))
         printf("    special bits set:    %s%s%s\n",
-               (sb->st_mode & S_ISUID) ? "set-UID " : "",
-               (sb->st_mode & S_ISGID) ? "set-GID " : "",
-               (sb->st_mode & S_ISVTX) ? "sticky" : "");
+                (sb->st_mode & S_ISUID) ? "set-UID " : "",
+                (sb->st_mode & S_ISGID) ? "set-GID " : "",
+                (sb->st_mode & S_ISVTX) ? "sticky" : "");
 
     printf("Number of (hard) links:    %ld\n", (long) sb->st_nlink);
 
@@ -187,29 +188,41 @@ void depthfirst(const char *path) {
         return;
     }
 
+    char *files[128];
+
+    char *nodeArr[128];
+    memset(nodeArr, 0, 128);
+
+    int regular_file_count = 0;
+    char abs_path[PATH_MAX];
     struct dirent *dentp = NULL;
-    while ((dentp = readdir(dirp)) != NULL) {
+    while (dentp = readdir(dirp)) {
 
         if (strcmp(dentp->d_name, ".") == 0 || strcmp(dentp->d_name, "..") == 0)
             continue;
 
-        char abs_path[PATH_MAX];
+
         sprintf(abs_path, "%s/%s", path, dentp->d_name);
 
 
         // Check if its a directory
-        struct stat s;
-        if (stat(abs_path, &s) == -1) {
-            perror("stat");
-        } else if ((s.st_mode & S_IFMT) == S_IFDIR) {
+        if (dentp->d_type == DT_DIR) {
             // visit node
             printf("%s\n", abs_path);
             depthfirst(abs_path);
+        } else {
+            files[regular_file_count] = (char*) malloc(strlen(abs_path) * sizeof(char*));
+            strcpy(files[regular_file_count++], abs_path);
         }
+    }
+    for (--regular_file_count; regular_file_count >= 0; regular_file_count--) {
+        printf("%s\n", files[regular_file_count]);
     }
 }
 
+
+
 int main(int argc, char *argv[]) {
-//    listFiles(argv[1]);
+    //    listFiles(argv[1]);
     depthfirst(".");
 }

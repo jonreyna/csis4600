@@ -1,4 +1,5 @@
 #define _BSD_SOURCE
+
 #include <dirent.h>
 #include <stdbool.h>
 #include <string.h>
@@ -7,22 +8,35 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <linux/limits.h>
 #include "file_perms.h"
 
-static void displayStatInfo(const struct stat *sb)
-{
+static void displayStatInfo(const struct stat *sb) {
     printf("File type:                   ");
 
-    switch (sb->st_mode &S_IFMT) {
-        case S_IFREG: printf("regular file\n"); break;
-        case S_IFDIR: printf("directory\n"); break;
-        case S_IFCHR: printf("character device\n"); break;
-        case S_IFBLK: printf("block device\n"); break;
-        case S_IFLNK: printf("symbolic (soft) link\n"); break;
-        case S_IFIFO: printf("FIFO or pipe\n"); break;
-        case S_IFSOCK: printf("socket\n"); break;
-        default: printf("unknown file type?\n");
+    switch (sb->st_mode & S_IFMT) {
+        case S_IFREG:
+            printf("regular file\n");
+            break;
+        case S_IFDIR:
+            printf("directory\n");
+            break;
+        case S_IFCHR:
+            printf("character device\n");
+            break;
+        case S_IFBLK:
+            printf("block device\n");
+            break;
+        case S_IFLNK:
+            printf("symbolic (soft) link\n");
+            break;
+        case S_IFIFO:
+            printf("FIFO or pipe\n");
+            break;
+        case S_IFSOCK:
+            printf("socket\n");
+            break;
+        default:
+            printf("unknown file type?\n");
     }
 
     printf("device containing i-node: major=%ld   minor=%ld\n", (long) major(sb->st_dev), (long) minor(sb->st_dev));
@@ -31,9 +45,9 @@ static void displayStatInfo(const struct stat *sb)
 
     if (sb->st_mode & (S_ISUID | S_ISGID | S_ISVTX))
         printf("    special bits set:    %s%s%s\n",
-                (sb->st_mode & S_ISUID) ? "set-UID " : "",
-                (sb->st_mode & S_ISGID) ? "set-GID " : "",
-                (sb->st_mode & S_ISVTX) ? "sticky" : "");
+               (sb->st_mode & S_ISUID) ? "set-UID " : "",
+               (sb->st_mode & S_ISGID) ? "set-GID " : "",
+               (sb->st_mode & S_ISVTX) ? "sticky" : "");
 
     printf("Number of (hard) links:    %ld\n", (long) sb->st_nlink);
 
@@ -51,8 +65,7 @@ static void displayStatInfo(const struct stat *sb)
 }
 
 static void /* List all directories in 'dirpath' */
-listFiles(const char *dirpath)
-{
+listFiles(const char *dirpath) {
     bool isCurrent; /* true if 'dirpath' is "." */
 
     isCurrent = strcmp(dirpath, ".") == 0;
@@ -68,7 +81,7 @@ listFiles(const char *dirpath)
 
     /* For each entry in this directory, print directory + filename */
 
-    for (;;) {
+    for (; ;) {
         errno = 0;
 
         struct dirent *dp = NULL;
@@ -94,7 +107,7 @@ listFiles(const char *dirpath)
             perror("stat error");
         } else {
             printf("\n");
-             displayStatInfo(&s);
+            displayStatInfo(&s);
         }
     }
 
@@ -105,6 +118,98 @@ listFiles(const char *dirpath)
         perror("closedir");
 }
 
+static void /* List all directories in 'dirpath' */
+listFiles2(const char *dirpath) {
+    bool isCurrent; /* true if 'dirpath' is "." */
+
+    isCurrent = strcmp(dirpath, ".") == 0;
+
+    DIR *dirp = NULL;
+    dirp = opendir(dirpath);
+    if (dirp == NULL) {
+        char messageBuf[128];
+        sprintf(messageBuf, "opendir failed on '%s'", dirpath);
+        perror(messageBuf);
+        return;
+    }
+
+    /* For each entry in this directory, print directory + filename */
+
+    for (; ;) {
+        errno = 0;
+
+        struct dirent *dp = NULL;
+        dp = readdir(dirp);
+        if (dp == NULL)
+            break;
+
+        if (strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0)
+            continue;
+
+        if (!isCurrent)
+            printf("%s/", dirpath);
+        printf("%s\n", dp->d_name);
+        printf("dp->d_name: %s\n", dp->d_name);
+
+        char absolute_path_buf[PATH_MAX];
+        memset(absolute_path_buf, 0, PATH_MAX);
+        sprintf(absolute_path_buf, "%s/%s", dirpath, dp->d_name);
+        printf("absolute_path_buf: %s", absolute_path_buf);
+
+        struct stat s;
+        if (stat(absolute_path_buf, &s) == -1) {
+            perror("stat error");
+        } else {
+            printf("\n");
+            displayStatInfo(&s);
+        }
+    }
+
+    if (errno != 0)
+        perror("readdir");
+
+    if (closedir(dirp) == -1)
+        perror("closedir");
+}
+
+/**
+ * Cases
+ * 1. It's just a file. Print its path and return.
+ * 2. It's a directory. Call yourself with the directory path.
+ */
+void depthfirst(const char *path) {
+
+    DIR *dirp = NULL;
+
+    if (path == NULL || strncmp(path, "", 1) == 0) {
+        return;
+    } else if ((dirp = opendir(path)) == NULL) {
+        return;
+    }
+
+    struct dirent *dentp = NULL;
+    while ((dentp = readdir(dirp)) != NULL) {
+
+        if (strcmp(dentp->d_name, ".") == 0 || strcmp(dentp->d_name, "..") == 0)
+            continue;
+
+        char abs_path[PATH_MAX];
+        sprintf(abs_path, "%s/%s", path, dentp->d_name);
+
+
+        // Check if its a directory
+        struct stat s;
+        if (stat(abs_path, &s) == -1) {
+            perror("stat");
+        } else if ((s.st_mode & S_IFMT) == S_IFDIR) {
+            // visit node
+            printf("%s\n", abs_path);
+            depthfirst(abs_path);
+        }
+    }
+}
+
 int main(int argc, char *argv[]) {
-    listFiles(argv[1]);
+//    listFiles(argv[1]);
+    depthfirst(".");
 }

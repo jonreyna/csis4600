@@ -25,8 +25,9 @@
 \end{titlepage}
 
 \section{Problem Statement}
-The problem seeks to traverse a directory tree using a recursive depth
-first search algorithm, followed by a breadth first search.\\
+Exercise 5.8 requires a directory traversal implementation that uses both depth-first and breadth-first search algorithms. Chapter 5 discusses how to traverse directories with streams, using opendir and readdir. The solutions will use both of these POSIX functions to implement the algorithms.
+\subsection{Depth-First Search}
+The depth-first search portion of this problem suggests using a recursive algorithm. The algorithm is as follows:\\
 \begin{tikzpicture}[%
         scale=.7,
         grow via three points={one child at (0.5,-0.65) and

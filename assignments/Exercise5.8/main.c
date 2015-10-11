@@ -217,7 +217,9 @@ void depthfirst(const char *path) {
     }
     for (--regular_file_count; regular_file_count >= 0; regular_file_count--) {
         printf("%s\n", files[regular_file_count]);
+        free(files[regular_file_count]);
     }
+    closedir(dirp);
 }
 
 

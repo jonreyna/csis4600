@@ -10,3 +10,9 @@
 *.plist
 
 *.idea
+
+*.log
+*.aux
+*.pdf
+*.gz
+*.dvi

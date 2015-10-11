@@ -1,0 +1,47 @@
+\documentclass[12pt,sffamily]{article}
+\usepackage{datetime}
+\usepackage{tikz}
+\usetikzlibrary{trees}
+\begin{document}
+\tikzstyle{every node}=[thick,anchor=west, rounded corners, font={\scriptsize\ttfamily}, inner sep=2.5pt]
+\tikzstyle{selected}=[draw=blue,fill=blue!10]
+\tikzstyle{root}=[selected, fill=blue!30]
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1cm}
+        \Huge
+        \textbf{Chapter 5}\\
+        \vspace{0.5cm}
+        \LARGE
+        Traversing Directories
+        \vfill
+        \Large
+        \textbf{Jonathan Reyna}\\
+        College of Engineering and Computing\\
+        Nova Southeastern University\\
+        \usdate{\today}
+    \end{center}
+\end{titlepage}
+
+\section{Problem Statement}
+The problem seeks to traverse a directory tree using a recursive depth
+first search algorithm, followed by a breadth first search.\\
+\begin{tikzpicture}[%
+        scale=.7,
+        grow via three points={one child at (0.5,-0.65) and
+        two children at (0.5,-0.65) and (0.5,-1.1)},
+    edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+    \node [root] {/}
+        child {node [selected] {dirA}
+            child {node {my1.dat}}
+            child {node {my2.dat}}
+            child {node [selected] {dirB}
+                child {node {my1.dat}}
+            }
+        }
+        child {node at (0,-3.5) [selected] {dirC}
+            child {node {my3.dat}}
+        };
+\end{tikzpicture}
+\end{document}

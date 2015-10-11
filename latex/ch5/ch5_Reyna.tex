@@ -1,7 +1,15 @@
 \documentclass[12pt,sffamily]{article}
 \usepackage{datetime}
 \usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{amsmath}
+\usepackage[noend]{algpseudocode}
 \usetikzlibrary{trees}
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
 \begin{document}
 \tikzstyle{every node}=[thick,anchor=west, rounded corners, font={\scriptsize\ttfamily}, inner sep=2.5pt]
 \tikzstyle{selected}=[draw=blue,fill=blue!10]
@@ -27,7 +35,22 @@
 \section{Problem Statement}
 Exercise 5.8 requires a directory traversal implementation that uses both depth-first and breadth-first search algorithms. Chapter 5 discusses how to traverse directories with streams, using opendir and readdir. The solutions will use both of these POSIX functions to implement the algorithms.
 \subsection{Depth-First Search}
-The depth-first search portion of this problem suggests using a recursive algorithm. The algorithm is as follows:\\
+The depth-first search portion of this problem suggests using a recursive algorithm. The algorithm is as follows:
+\begin{algorithm}
+	\caption{Depth-First Search}
+	\label{depthfirst}
+	\begin{algorithmic}[1]
+		\Procedure{depthfirst}{}
+		\For{each node at or below $root$}
+		\State visit($node$)
+		\If{$node$ is a directory}
+		\State\Return{\Call{depthfirst}{$node$}}
+		\EndIf
+		\EndFor
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}\\
+The algorithm implementation will traverse the following directory strucure:\\
 \begin{tikzpicture}[%
         scale=.7,
         grow via three points={one child at (0.5,-0.65) and
@@ -44,5 +67,7 @@ The depth-first search portion of this problem suggests using a recursive algori
         child {node at (0,-3.5) [selected] {dirC}
             child {node {my3.dat}}
         };
-\end{tikzpicture}
+\end{tikzpicture}\\
+safdsadf
 \end{document}
+

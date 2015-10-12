@@ -16,3 +16,6 @@
 *.pdf
 *.gz
 *.dvi
+
+*.pygtex
+*.pygstyle

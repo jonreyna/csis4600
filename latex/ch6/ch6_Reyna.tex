@@ -174,4 +174,122 @@ int main(int argc, char *argv[]) {
 	\caption[sigint]{End the pipeserver process}
 	\label{fig:12}
 \end{figure}
+\section{Program 6.8: pipeclient}
+This program uses pipeserver.
+\subsection{Relation to Learned Material}
+The prgram illustrates POSIX IPC via pipes.
+\subsection{Source Code}
+\renewcommand{\theFancyVerbLine}{
+	\sffamily\textcolor[rgb]{0.5,0.5,0.5}{\scriptsize\arabic{FancyVerbLine}}}
+
+\begin{minted}[mathescape,
+	linenos,
+	numbersep=5pt,
+	gobble=0,
+	frame=lines,
+	framesep=2mm]{c}
+	
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+#include <linux/limits.h>
+#include <string.h>
+#include "../restart/restart.h"
+
+#define FIFOARG 1
+
+int main(int argc, char *argv[]) {
+  char requestbuf[PIPE_BUF];
+  int requestfd;
+	
+  if (argc != 2) {
+    fprintf(stderr, "Usage: %s fifoname", argv[0]);
+    return 1;
+  }
+	
+  if ((requestfd = open(argv[FIFOARG], O_WRONLY)) == -1) {
+    perror("Client failed to open log fifo for writing");
+    return 1;
+  }
+	
+  time_t curtime = time(NULL);
+  snprintf(requestbuf, PIPE_BUF, "%d: %s", (int) getpid(), 
+           ctime(&curtime));
+  int len = strlen(requestbuf);
+	
+  if (r_write(requestfd, requestbuf, len) != len) {
+    perror("Client failed to write");
+    return 1;
+  }
+	
+  r_close(requestfd);
+	
+  return 0;
+}
+\end{minted}
+\subsection{Environment}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{./images/0}
+	\caption[env]{Build Environment}
+	\label{fig:13}
+\end{figure}
+\subsection{Build}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{./images/13}
+	\caption[CMake_prep]{CMake Metabuild}
+	\label{fig:14}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{./images/14}
+	\caption[make_build]{UNIX make}
+	\label{fig:15}
+\end{figure}
+\subsection{Run}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{./images/15}
+	\caption[starting_pipe_server]{Starting the pipe server}
+	\label{fig:16}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{./images/16}
+	\caption[preparing_gdb]{Preparing GDB}
+	\label{fig:17}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{./images/17}
+	\caption[opening_fifo]{Opening the FIFO for writing}
+	\label{fig:18}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{./images/18}
+	\caption[assigned_file_descriptor]{Checking the assigned file descriptor}
+	\label{fig:19}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{./images/19}
+	\caption[printing_buffer]{Printing the buffer before writing}
+	\label{fig:20}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.5\linewidth]{./images/20}
+	\caption[verifying_pipeserver_read]{Verifying the pipeserver's read}
+	\label{fig:21}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.7\linewidth]{./images/21}
+	\caption[verifying_write_from_current_pid]{Verifying the write was from this process}
+	\label{fig:22}
+\end{figure}
 \end{document}

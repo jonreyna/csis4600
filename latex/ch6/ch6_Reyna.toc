@@ -1,0 +1,22 @@
+\contentsline {section}{\numberline {1}Program 6.7: pipeserver}{2}
+\contentsline {subsection}{\numberline {1.1}Relation to Learned Material}{2}
+\contentsline {subsection}{\numberline {1.2}Source Code}{2}
+\contentsline {subsection}{\numberline {1.3}Environment}{3}
+\contentsline {subsection}{\numberline {1.4}Build}{3}
+\contentsline {subsection}{\numberline {1.5}Run}{4}
+\contentsline {section}{\numberline {2}Program 6.8: pipeclient}{11}
+\contentsline {subsection}{\numberline {2.1}Relation to Learned Material}{11}
+\contentsline {subsection}{\numberline {2.2}Source Code}{11}
+\contentsline {subsection}{\numberline {2.3}Environment}{12}
+\contentsline {subsection}{\numberline {2.4}Build}{12}
+\contentsline {subsection}{\numberline {2.5}Run}{13}
+\contentsline {section}{\numberline {3}Programs 6.9 and 6.10: seqserverbad and seqclientbad}{18}
+\contentsline {subsection}{\numberline {3.1}Relation to Learned Material}{18}
+\contentsline {subsection}{\numberline {3.2}Source Code}{18}
+\contentsline {subsubsection}{\numberline {3.2.1}seqserverbad}{19}
+\contentsline {subsubsection}{\numberline {3.2.2}seqclientbad}{20}
+\contentsline {subsection}{\numberline {3.3}Environment}{22}
+\contentsline {subsection}{\numberline {3.4}Build}{22}
+\contentsline {subsubsection}{\numberline {3.4.1}seqserverbad}{23}
+\contentsline {subsubsection}{\numberline {3.4.2}seqclientbad}{23}
+\contentsline {subsection}{\numberline {3.5}Run}{24}

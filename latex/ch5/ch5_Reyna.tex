@@ -35,10 +35,11 @@
     \usdate{\today}
   \end{center}
 \end{titlepage}
-
-\section{Problem Statement}
+\tableofcontents
+\pagebreak
+\section{Problem Statement: Depth-First Search}
 Exercise 5.8 requires a directory traversal implementation that uses both depth-first and breadth-first search algorithms. Chapter 5 discusses how to traverse directories with streams, using opendir and readdir. The solutions will use both of these POSIX functions to implement the algorithms.
-\subsection{Algorithm: Depth-First Search}
+\subsection{Algorithm}
 The depth-first search portion of this problem suggests using a recursive algorithm. The algorithm is as follows:
 \begin{algorithm}
   \caption{Depth-First Search}
@@ -157,7 +158,7 @@ UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
 \centering
 \includegraphics[width=1\linewidth]{./images/0}
 \caption[build_1]{Build}
-\label{fig:11}
+\label{fig:1}
 \end{figure}
 \subsection{Run}
 For this run, GDB must be run with arguments pointing to the example directory, with the required 
@@ -166,20 +167,20 @@ directory strcuture.
 \centering
 \includegraphics[width=1\linewidth]{./images/1}
 \caption[GDB_prep]{Preparing GDB}
-\label{fig:1}
+\label{fig:2}
 \end{figure}
 Once GDB has stepped into depthfirst(), the passed arguments can be verified.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1\linewidth]{./images/2}
 	\caption[GDB_verify_1]{Verifying Function Scope}
-	\label{fig:2}
+	\label{fig:3}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.5\linewidth]{./images/3}
 	\caption[GDB_verify_2]{Verifying function argument}
-	\label{fig:3}
+	\label{fig:4}
 \end{figure}
 The first check in \mintinline{c}{depthfirst()} ensures that the path parameter is not empty or 
 \mintinline{c}{NULL}. If it is, \mintinline{c}{depthfirst()} returns. Otherwise, it establishes the 
@@ -193,7 +194,7 @@ Since execution is beginning, and the directory tree structure has not been trav
 	\centering
 	\includegraphics[width=1\linewidth]{./images/4}
 	\caption[First_opendir]{First opendir() run}
-	\label{fig:4}
+	\label{fig:5}
 \end{figure}
 \mintinline{c}{dirp} was initialized on declaration to \mintinline{c}{NULL}, so memory allocation can be
 verified by simply printing the pointer in GDB.
@@ -201,7 +202,7 @@ verified by simply printing the pointer in GDB.
 	\centering
 	\includegraphics[width=.3\linewidth]{./images/5}
 	\caption[print_dirp_pointer]{Printing dirp}
-	\label{fig:5}
+	\label{fig:6}
 \end{figure}
 Beginning the \mintinline{c}{while} loop, the result of \mintinline{c}{readdir(dirp)} is tested, as it
 will be on each iteration.
@@ -209,7 +210,7 @@ will be on each iteration.
 	\centering
 	\includegraphics[width=1\linewidth]{./images/6}
 	\caption[while_loop_test]{While loop test}
-	\label{fig:6}
+	\label{fig:7}
 \end{figure}
 The implementation must verify that \mintinline{c}{d_name} is not \mintinline{c}{"."} or 
 \mintinline{c}{".."}, because visiting such nodes would cause extraneous entries to be printed. If this
@@ -219,7 +220,7 @@ path to the current entry. It is at this point, that the decision must be made w
 	\centering
 	\includegraphics[width=1\linewidth]{./images/7}
 	\caption[directory_check]{Check for recursive case}
-	\label{fig:7}
+	\label{fig:8}
 \end{figure}
 Using GDB, it is observed that this is indeed the recursive case, where \mintinline{c}{dentp->d_type} is
 equivalent to \mintinline{c}{DT_DIR}, implying that the stream returned a directory on this iteration. As a result, this implementation will print the entry, and \mintinline{c}{depthfirst()} will be called
@@ -228,7 +229,7 @@ with the current directory as an argument.
 	\centering
 	\includegraphics[width=.3\linewidth]{./images/8}
 	\caption[verify_recursive_case]{Verifying recursive case}
-	\label{fig:8}
+	\label{fig:9}
 \end{figure}
 Stepping into the new \mintinline{c}{depthfirst()}, the registers, and stack, show references to 
 \mintinline{bash}{dirA}.
@@ -236,14 +237,14 @@ Stepping into the new \mintinline{c}{depthfirst()}, the registers, and stack, sh
 	\centering
 	\includegraphics[width=1\linewidth]{./images/9}
 	\caption[inside_first_recursive_case]{Inside first recursive case}
-	\label{fig:9}
+	\label{fig:10}
 \end{figure}
 The implementation will step through just as it did on the previous function stack. This time, however, the directory entry will be a file, not a directory.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1\linewidth]{./images/10}
 	\caption[first_non_recursive_case]{First non-recursive case}
-	\label{fig:10}
+	\label{fig:11}
 \end{figure}
 As shown here, memory must be allocated to store the C-string in this element of the array. Once
 allocated, \mintinline{c}{strcpy()} can be used to copy the C-string, representing the file, into the
@@ -256,7 +257,7 @@ finished, and the file array is printed.
 	\centering
 	\includegraphics[width=1\linewidth]{./images/11}
 	\caption[regular_file_loop_array]{Regular file loop and array}
-	\label{fig:11}
+	\label{fig:12}
 \end{figure}
 After these regular files are printed, the stack will unwind, and the regular files the parent 
 directories will be printed. Once the root directory is reached, \mintinline{bash}{dirC} will be

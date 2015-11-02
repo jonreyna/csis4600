@@ -1,0 +1,6 @@
+\contentsline {section}{\numberline {1}Problem Statement: Depth-First Search}{2}
+\contentsline {subsection}{\numberline {1.1}Algorithm}{2}
+\contentsline {subsection}{\numberline {1.2}Implementation}{2}
+\contentsline {subsection}{\numberline {1.3}Environment}{4}
+\contentsline {subsection}{\numberline {1.4}Build}{4}
+\contentsline {subsection}{\numberline {1.5}Run}{5}

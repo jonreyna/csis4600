@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (((reqfd = open(argv[REQUEST_FIFO], O_RDWR)) == -1) ||
-        (seqfd = open(argv[SEQUENCE_FIFO], O_RDWR) == -1)) {
+        ((seqfd = open(argv[SEQUENCE_FIFO], O_RDWR)) == -1)) {
         perror("Server failed to open one of the FIFOs");
         return 1;
     }

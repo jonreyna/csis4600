@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
         if (childpid > 0) {  // for parent process, reassign stdout
             error = dup2(fd[1], STDOUT_FILENO);
         } else {  // for child process, reassign stdin
-            error = dup2(fd[1], STDOUT_FILENO);
+            error = dup2(fd[0], STDIN_FILENO);
         }
         if (error == -1) {
             fprintf(stderr, "[%ld]:failed to dup pipes for iteration %d: %s\n",
